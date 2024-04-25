@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import "src/components/css/input.css";
 
 // TODO: Support for various types
-// [ ] color
+// [x] color
 // [ ] date
 // [ ] datetime-local
 // [ ] email
@@ -107,7 +107,7 @@ export default function Input(p: IInputProps) {
           <input
             id={inputId}
             type={p.type as string}
-            value={p.value}
+            value={p.value || p.type === "color" ? "#000000" : ""}
             placeholder={p.noFloat || p.type === "search" ? p.label : ""}
             className={`my-0 ${colorPadding} ${colorWidth} ${searchPadding} outline-none ${searchFont}`}
             onFocus={() => setIsFocused(true)}
