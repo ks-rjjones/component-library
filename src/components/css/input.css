@@ -11,5 +11,4 @@
 
 [type="search"]::-webkit-search-cancel-button:hover {
   filter: invert(0.7);
-  /* Slightly different effect on hover for better user feedback */
 }

@@ -7,7 +7,7 @@ import "src/components/css/input.css";
 // [x] color
 // [x] date
 // [x] datetime-local
-// [ ] email
+// [x] email
 // [ ] file
 // [ ] hidden
 // [ ] month

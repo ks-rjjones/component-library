@@ -10,6 +10,7 @@ function App() {
   const [colorInput, setColorInput] = useState("");
   const [dateInput, setDateInput] = useState("");
   const [dateTimeInput, setDateTimeInput] = useState("");
+  const [emailInput, setEmailInput] = useState("");
 
   const Spacer = () => <div className="my-2" />;
 
@@ -85,7 +86,7 @@ function App() {
           value={colorInput}
           onChange={setColorInput}
           border
-          noFloat
+          // noFloat
         />
         <Spacer />
         <Input
@@ -94,7 +95,7 @@ function App() {
           type="date"
           value={dateInput}
           onChange={setDateInput}
-          noFloat
+          // noFloat
           border
         />
         <Spacer />
@@ -104,6 +105,16 @@ function App() {
           type="datetime-local"
           value={dateTimeInput}
           onChange={setDateTimeInput}
+          // noFloat
+          border
+        />
+        <Spacer />
+        <Input
+          inputName="emailInput"
+          label="Email Input"
+          type="email"
+          value={emailInput}
+          onChange={setEmailInput}
           // noFloat
           border
         />
