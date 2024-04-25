@@ -6,6 +6,8 @@ import Input from "src/components/Input";
 function App() {
   const [checkbox, setCheckbox] = useState(false);
   const [textInput, setTextInput] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [colorInput, setColorInput] = useState("");
 
   const Spacer = () => <div className="my-2" />;
 
@@ -59,8 +61,8 @@ function App() {
           inputName="searchInput"
           label="Search Input"
           type="search"
-          value={textInput}
-          onChange={setTextInput}
+          value={searchInput}
+          onChange={setSearchInput}
           border
         />
         <Spacer />
@@ -74,6 +76,15 @@ function App() {
           noFloat
         />
         <Spacer />
+        <Input
+          inputName="colorInput"
+          label="Color Input"
+          type="color"
+          value={colorInput}
+          onChange={setColorInput}
+          border
+          noFloat
+        />
         <Spacer />
         <Spacer />
       </div>

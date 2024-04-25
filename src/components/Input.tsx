@@ -67,6 +67,14 @@ export default function Input(p: IInputProps) {
     );
   };
 
+  const colorPadding = useMemo(() => {
+    return `${p.type === "color" ? "!p-0" : ""}`;
+  }, [p.type]);
+
+  const colorWidth = useMemo(() => {
+    return `${p.type === "color" ? "w-6" : "w-full"}`;
+  }, [p.type]);
+
   const searchPadding = useMemo(() => {
     return `${p.noFloat || p.type === "search" ? "py-1.5" : "pt-4"}`;
   }, [p.noFloat, p.type]);
@@ -94,14 +102,14 @@ export default function Input(p: IInputProps) {
         >
           {p.label}
         </label>
-        <div className="flex w-full">
+        <div className="flex w-full items-center">
           {p.type === "search" && <SearchIcon />}
           <input
             id={inputId}
             type={p.type as string}
             value={p.value}
             placeholder={p.noFloat || p.type === "search" ? p.label : ""}
-            className={`my-0 w-full ${searchPadding} outline-none ${searchFont}`}
+            className={`my-0 ${colorPadding} ${colorWidth} ${searchPadding} outline-none ${searchFont}`}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onChange={(e) => {
@@ -111,6 +119,7 @@ export default function Input(p: IInputProps) {
               }
             }}
           />
+          {p.type === "color" && <span className="ml-1">{p.value || "#000000"}</span>}
         </div>
       </div>
       {!p.border && <hr />}
