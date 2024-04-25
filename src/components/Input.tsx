@@ -7,24 +7,7 @@ import _ from "lodash";
 
 // TODO: [ ] Add various default error messages.
 
-// TODO: Support for various types
-// [x] color
-// [x] date
-// [x] datetime-local
-// [x] email
-// [x] file
-// [x] hidden
-// [x] month
-// [x] number
-// [x] password
-// [x] search // TODO: Needs search icon
-// [x] tel
-// [x] text
-// [ ] time
-// [ ] url
-// [ ] week
-
-const invalidInputTypes = ["button", "checkbox", "image", "radio", "range", "reset", "submit"];
+const unsupportedInputTypes = ["button", "checkbox", "image", "radio", "range", "reset", "submit"];
 const inputProps = [
   "label",
   "helperText",
@@ -61,7 +44,7 @@ export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement>
 }
 
 const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, ref) => {
-  if (p.type && invalidInputTypes.includes(p.type.toString())) {
+  if (p.type && unsupportedInputTypes.includes(p.type.toString())) {
     throw new Error(`Invalid input type: ${p.type}`);
   }
 
@@ -100,9 +83,9 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
   const isSearch = useMemo(() => p.type === "search", [p.type]);
   const isTel = useMemo(() => p.type === "tel", [p.type]);
   const _isText = useMemo(() => p.type === "text", [p.type]);
-  const _isTime = useMemo(() => p.type === "time", [p.type]);
+  const isTime = useMemo(() => p.type === "time", [p.type]);
   const _isUrl = useMemo(() => p.type === "url", [p.type]);
-  const _isWeek = useMemo(() => p.type === "week", [p.type]);
+  const isWeek = useMemo(() => p.type === "week", [p.type]);
 
   const inputPadding = useMemo(() => {
     if (isColor) return p.noFloat ? "my-1 !p-0" : "mt-4 !p-0 mb-0.5";
@@ -116,12 +99,34 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
   }, [isColor]);
 
   const labelPos = useMemo(() => {
-    return `${p.value || displayValue || isFocused || isColor || isDate || isDateTime || isFile || isMonth ? "translate-y-0.5" : "translate-y-3"}`;
-  }, [p.value, displayValue, isFocused, isColor, isDate, isDateTime, isFile, isMonth]);
+    return `${p.value || displayValue || isFocused || isColor || isDate || isDateTime || isFile || isMonth || isTime || isWeek ? "translate-y-0.5" : "translate-y-3"}`;
+  }, [
+    p.value,
+    displayValue,
+    isFocused,
+    isColor,
+    isDate,
+    isDateTime,
+    isFile,
+    isMonth,
+    isTime,
+    isWeek,
+  ]);
 
   const labelSize = useMemo(() => {
-    return `${p.value || displayValue || isFocused || isColor || isDate || isDateTime || isFile || isMonth ? "text-xs	" : "text-base"}`;
-  }, [p.value, displayValue, isFocused, isColor, isDate, isDateTime, isFile, isMonth]);
+    return `${p.value || displayValue || isFocused || isColor || isDate || isDateTime || isFile || isMonth || isTime || isWeek ? "text-xs	" : "text-base"}`;
+  }, [
+    p.value,
+    displayValue,
+    isFocused,
+    isColor,
+    isDate,
+    isDateTime,
+    isFile,
+    isMonth,
+    isTime,
+    isWeek,
+  ]);
 
   const labelVisibility = useMemo(() => {
     return `${(p.noFloat || isSearch) && "hidden"}`;

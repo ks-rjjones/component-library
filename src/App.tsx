@@ -16,6 +16,9 @@ function App() {
   const [numberInput, setNumberInput] = useState(0);
   const [passwordInput, setPasswordInput] = useState("");
   const [telInput, setTelInput] = useState("");
+  const [timeInput, setTimeInput] = useState("");
+  const [urlInput, setUrlInput] = useState("");
+  const [weekInput, setWeekInput] = useState("");
 
   const Spacer = () => <div className="my-2" />;
 
@@ -178,6 +181,39 @@ function App() {
           type="tel"
           value={telInput}
           onChange={(e) => setTelInput(e.target.value)}
+          // noFloat
+          border
+        />
+        <Spacer />
+        <Input
+          // hidden
+          name="timeInput"
+          label="Time Input"
+          type="time"
+          value={timeInput}
+          onChange={(e) => setTimeInput(e.target.value)}
+          // noFloat
+          border
+        />
+        <Spacer />
+        <Input
+          // hidden
+          name="urlInput"
+          label="Url Input"
+          type="url"
+          value={urlInput}
+          onChange={(e) => setUrlInput(e.target.value)}
+          // noFloat
+          border
+        />
+        <Spacer />
+        <Input
+          // hidden
+          name="weekInput"
+          label="Week Input"
+          type="week"
+          value={weekInput}
+          onChange={(e) => setWeekInput(e.target.value)}
           // noFloat
           border
         />
