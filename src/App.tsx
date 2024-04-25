@@ -8,6 +8,7 @@ function App() {
   const [textInput, setTextInput] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [colorInput, setColorInput] = useState("");
+  const [dateInput, setDateInput] = useState("");
 
   const Spacer = () => <div className="my-2" />;
 
@@ -58,15 +59,6 @@ function App() {
         />
         <Spacer />
         <Input
-          inputName="searchInput"
-          label="Search Input"
-          type="search"
-          value={searchInput}
-          onChange={setSearchInput}
-          border
-        />
-        <Spacer />
-        <Input
           inputName="textInputWithoutFloatingLabel"
           label="Text Input Without Floating Label"
           type="text"
@@ -74,6 +66,15 @@ function App() {
           onChange={setTextInput}
           border
           noFloat
+        />
+        <Spacer />
+        <Input
+          inputName="searchInput"
+          label="Search Input"
+          type="search"
+          value={searchInput}
+          onChange={setSearchInput}
+          border
         />
         <Spacer />
         <Input
@@ -86,6 +87,15 @@ function App() {
           noFloat
         />
         <Spacer />
+        <Input
+          inputName="dateInput"
+          label="Date Input"
+          type="date"
+          value={dateInput}
+          onChange={setDateInput}
+          noFloat
+          border
+        />
         <Spacer />
       </div>
     </>

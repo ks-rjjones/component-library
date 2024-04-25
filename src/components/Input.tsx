@@ -42,9 +42,49 @@ export default function Input(p: IInputProps) {
 
   const [isFocused, setIsFocused] = useState(false);
 
+  const isColor = useMemo(() => p.type === "color", [p.type]);
+  const isDate = useMemo(() => p.type === "date", [p.type]);
+  const _isDateTime = useMemo(() => p.type === "datetime-local", [p.type]);
+  const _isEmail = useMemo(() => p.type === "email", [p.type]);
+  const _isFile = useMemo(() => p.type === "file", [p.type]);
+  const _isHidden = useMemo(() => p.type === "hidden", [p.type]);
+  const _isMonth = useMemo(() => p.type === "month", [p.type]);
+  const _isNumber = useMemo(() => p.type === "number", [p.type]);
+  const _isPassword = useMemo(() => p.type === "password", [p.type]);
+  const isSearch = useMemo(() => p.type === "search", [p.type]);
+  const _isTel = useMemo(() => p.type === "tel", [p.type]);
+  const isText = useMemo(() => p.type === "text", [p.type]);
+  const _isTime = useMemo(() => p.type === "time", [p.type]);
+  const _isUrl = useMemo(() => p.type === "url", [p.type]);
+  const _isWeek = useMemo(() => p.type === "week", [p.type]);
+
+  const colorPadding = useMemo(() => {
+    return `${isColor ? (p.noFloat ? "my-1 !p-0" : "mt-4 !p-0 mb-0.5") : ""}`;
+  }, [isColor, p.noFloat]);
+
+  const colorSize = useMemo(() => {
+    return `${isColor ? "size-6" : "w-full"}`;
+  }, [isColor]);
+
+  const labelPos = useMemo(() => {
+    return `${p.value || isFocused || isColor || isDate ? "translate-y-0.5" : "translate-y-3"}`;
+  }, [p.value, isFocused, isColor, isDate]);
+
+  const labelSize = useMemo(() => {
+    return `${p.value || isFocused || isColor || isDate ? "text-xs	" : "text-base"}`;
+  }, [p.value, isFocused, isColor, isDate]);
+
+  const labelVisibility = useMemo(() => {
+    return `${(p.noFloat || p.type === "search") && "hidden"}`;
+  }, [p.noFloat, p.type]);
+
   const searchFont = useMemo(() => {
     return `${p.helperText && p.type === "search" && "placeholder:italic placeholder:text-stone-400"}`;
   }, [p.helperText, p.type]);
+
+  const searchPadding = useMemo(() => {
+    return `${p.noFloat || p.type === "search" ? "py-1.5" : "pt-4"}`;
+  }, [p.noFloat, p.type]);
 
   const SearchIcon = () => {
     return (
@@ -67,30 +107,6 @@ export default function Input(p: IInputProps) {
     );
   };
 
-  const colorPadding = useMemo(() => {
-    return `${p.type === "color" ? "!p-0" : ""}`;
-  }, [p.type]);
-
-  const colorWidth = useMemo(() => {
-    return `${p.type === "color" ? "w-6" : "w-full"}`;
-  }, [p.type]);
-
-  const searchPadding = useMemo(() => {
-    return `${p.noFloat || p.type === "search" ? "py-1.5" : "pt-4"}`;
-  }, [p.noFloat, p.type]);
-
-  const labelPos = useMemo(() => {
-    return `${p.value || isFocused ? "translate-y-0.5" : "translate-y-3"}`;
-  }, [p.value, isFocused]);
-
-  const labelSize = useMemo(() => {
-    return `${p.value || isFocused ? "text-xs	" : "text-base"}`;
-  }, [p.value, isFocused]);
-
-  const labelVisibility = useMemo(() => {
-    return `${(p.noFloat || p.type === "search") && "hidden"}`;
-  }, [p.noFloat, p.type]);
-
   return (
     <div
       className={`items-start rounded border border-transparent px-2 py-0 ${p.border && "!border-primary-500"}`}
@@ -107,9 +123,9 @@ export default function Input(p: IInputProps) {
           <input
             id={inputId}
             type={p.type as string}
-            value={p.value || p.type === "color" ? "#000000" : ""}
-            placeholder={p.noFloat || p.type === "search" ? p.label : ""}
-            className={`my-0 ${colorPadding} ${colorWidth} ${searchPadding} outline-none ${searchFont}`}
+            value={isColor && !p.value ? "#000000" : p.value}
+            placeholder={p.noFloat || isSearch ? p.label : ""}
+            className={`my-0 ${colorPadding} ${colorSize} ${searchPadding} outline-none ${searchFont}`}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onChange={(e) => {
@@ -119,7 +135,11 @@ export default function Input(p: IInputProps) {
               }
             }}
           />
-          {p.type === "color" && <span className="ml-1">{p.value || "#000000"}</span>}
+          {isColor && (
+            <span className={`${p.noFloat ? "my-1 ml-1" : "ml-1 mt-4"}`}>
+              {p.value || "#000000"}
+            </span>
+          )}
         </div>
       </div>
       {!p.border && <hr />}
