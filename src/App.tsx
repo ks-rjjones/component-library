@@ -13,6 +13,7 @@ function App() {
   const [emailInput, setEmailInput] = useState("");
   const [fileInput, setFileInput] = useState("");
   const [monthInput, setMonthInput] = useState("");
+  const [numberInput, setNumberInput] = useState(0);
 
   const Spacer = () => <div className="my-2" />;
 
@@ -142,6 +143,22 @@ function App() {
           onChange={(e) => setMonthInput(e.target.value)}
           noFloat
           border
+        />
+        <Spacer />
+        <Input
+          // hidden
+          name="numberInput"
+          label="Number Input"
+          type="number"
+          value={numberInput}
+          onChange={(e) => {
+            console.log("returned value", e.target.value);
+            setNumberInput(Number(e.target.value));
+          }}
+          noFloat
+          border
+          isDecimal
+          step={0.01}
         />
         <Spacer />
       </div>

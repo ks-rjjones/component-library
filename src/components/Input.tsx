@@ -1,8 +1,9 @@
 /* eslint-disable tailwindcss/no-unnecessary-arbitrary-value */
-import React from "react";
+import React, { useRef } from "react";
 import { useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "src/components/css/input.css";
+import _ from "lodash";
 
 // TODO: Support for various types
 // [x] color
@@ -12,7 +13,7 @@ import "src/components/css/input.css";
 // [x] file
 // [x] hidden
 // [x] month
-// [ ] number
+// [x] number
 // [ ] password
 // [x] search // TODO: Needs search icon
 // [ ] tel
@@ -22,13 +23,29 @@ import "src/components/css/input.css";
 // [ ] week
 
 const invalidInputTypes = ["button", "checkbox", "image", "radio", "range", "reset", "submit"];
+const inputProps = [
+  "label",
+  "helperText",
+  "errorText",
+  "border",
+  "noFloat",
+  "isInt",
+  "isDecimal",
+  "isCurrency",
+  "setValue",
+];
 
+// Note: Whenever modifying IInputProps, make sure to update the Omit lists in BOTH inputs below.
 export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   helperText?: string;
   errorText?: string;
   border?: boolean;
   noFloat?: boolean;
+  isInt?: boolean;
+  isDecimal?: boolean;
+  isCurrency?: boolean;
+  currencyType?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, ref) => {
@@ -40,6 +57,23 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
     return `input-${uuidv4()}`;
   }, []);
 
+  const lastChangeEvent = useRef<React.ChangeEvent<HTMLInputElement> | null>(null); // used for manually calling onChange
+  const [displayValue, setDisplayValue] = useState<string>(""); // used for number inputs
+  const CurrencyFormat = useMemo(() => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: p.currencyType || "USD",
+    });
+  }, [p.currencyType]);
+
+  // TODO: Make units configurable
+  const DecimalFormat = useMemo(() => {
+    return new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      maximumFractionDigits: 2,
+    });
+  }, []);
+
   const [isFocused, setIsFocused] = useState(false);
 
   const isColor = useMemo(() => p.type === "color", [p.type]);
@@ -49,7 +83,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
   const isFile = useMemo(() => p.type === "file", [p.type]);
   const _isHidden = useMemo(() => p.type === "hidden", [p.type]);
   const isMonth = useMemo(() => p.type === "month", [p.type]);
-  const _isNumber = useMemo(() => p.type === "number", [p.type]);
+  const isNumber = useMemo(() => p.type === "number", [p.type]);
   const _isPassword = useMemo(() => p.type === "password", [p.type]);
   const isSearch = useMemo(() => p.type === "search", [p.type]);
   const _isTel = useMemo(() => p.type === "tel", [p.type]);
@@ -130,19 +164,107 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
           <input
             ref={ref}
             id={inputId}
-            type={p.type as string}
+            hidden={p.hidden || isNumber}
             value={isColor && !p.value ? "#000000" : p.value}
             placeholder={p.noFloat || isSearch ? p.label : ""}
-            className={`my-0 ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize}`}
+            className={`my-0 ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize} ${p.className}`}
+            min={p.min || 0}
+            onBlur={(e) => {
+              setIsFocused(false);
+              // TODO: Format the input value if it is a number
+              p.onBlur && p.onBlur(e);
+            }}
+            onChange={(e) => {
+              p.onChange && p.onChange(e);
+            }}
             onFocus={(e) => {
               setIsFocused(true);
               p.onFocus && p.onFocus(e);
             }}
+            onKeyDown={(e) => {
+              // TODO: Handle Enter key press. If the form is complete, submit the form. If the form is incomplete,
+              // TODO: focus the next required input.
+              p.onKeyDown && p.onKeyDown(e);
+            }}
+            onWheel={(e) => {
+              e.currentTarget.blur(); // prevent scrolling from changing the input
+              p.onWheel && p.onWheel(e);
+            }}
+            {..._.omit(p, [
+              ...inputProps,
+              "className",
+              "currencyType",
+              "hidden",
+              "min",
+              "onBlur", // must remove props and manually merge behavior above
+              "onChange", // if not, the default behavior will never be called
+              "onFocus",
+              "onKeyDown",
+              "onWheel",
+              "placeholder",
+              "value",
+            ])}
+          />
+          <input
+            id={`${inputId}-display`}
+            hidden={!isNumber}
+            value={displayValue}
+            placeholder={p.noFloat || isSearch ? p.label : ""}
+            className={`my-0 ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize} ${p.className}`}
+            min={p.min || 0}
             onBlur={(e) => {
               setIsFocused(false);
-              p.onBlur && p.onBlur(e);
+              if (isNumber) {
+                if (p.onChange && lastChangeEvent.current) {
+                  lastChangeEvent.current.target.value = e.target.value;
+                  p.onChange(lastChangeEvent.current);
+                }
+                if (p.isCurrency) {
+                  const nv = CurrencyFormat.format(Number(e.target.value));
+                  setDisplayValue(nv);
+                } else if (p.isDecimal) {
+                  const nv = DecimalFormat.format(Number(e.target.value));
+                  setDisplayValue(nv);
+                }
+              }
             }}
-            {...p}
+            onChange={(e) => {
+              lastChangeEvent.current = e;
+              if (p.isInt) {
+                e.target.value = e.target.value.replace(/[^0-9]/g, "");
+              } else if (p.isCurrency || p.isDecimal) {
+                e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+              }
+              setDisplayValue(e.target.value);
+            }}
+            onFocus={(e) => {
+              setIsFocused(true);
+              p.onFocus && p.onFocus(e);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") e.currentTarget.blur();
+              p.onKeyDown && p.onKeyDown(e);
+            }}
+            onWheel={(e) => {
+              e.currentTarget.blur(); // prevent scrolling from changing the input
+              p.onWheel && p.onWheel(e);
+            }}
+            type="text"
+            {..._.omit(p, [
+              ...inputProps,
+              "className",
+              "currencyType",
+              "hidden",
+              "min",
+              "onBlur", // must remove props and manually merge behavior above
+              "onChange", // if not, the default behavior will never be called
+              "onFocus",
+              "onKeyDown",
+              "onWheel",
+              "placeholder",
+              "type",
+              "value",
+            ])}
           />
           {isColor && (
             <span className={`${p.noFloat ? "my-1 ml-1" : "ml-1 mt-4"}`}>
