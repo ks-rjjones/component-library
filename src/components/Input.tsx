@@ -89,6 +89,10 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
     return `${p.helperText && isSearch && "placeholder:text-stone-400"}`;
   }, [isSearch, p.helperText]);
 
+  const hidden = useMemo(() => {
+    return `${p.hidden ? "!hidden !border-transparent" : ""}`;
+  }, [p.hidden]);
+
   const SearchIcon = () => {
     return (
       <div className="mr-2 flex items-center">
@@ -112,7 +116,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
 
   return (
     <div
-      className={`relative mb-6 items-start rounded border border-transparent px-2 py-0 ${p.border && "!border-primary-500"}`}
+      className={`relative mb-6 items-start rounded border border-transparent px-2 py-0 ${p.border && "!border-primary-500"} ${hidden}`}
     >
       <div className="relative flex flex-col items-start">
         <label
@@ -130,8 +134,14 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
             value={isColor && !p.value ? "#000000" : p.value}
             placeholder={p.noFloat || isSearch ? p.label : ""}
             className={`my-0 ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize}`}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
+            onFocus={(e) => {
+              setIsFocused(true);
+              p.onFocus && p.onFocus(e);
+            }}
+            onBlur={(e) => {
+              setIsFocused(false);
+              p.onBlur && p.onBlur(e);
+            }}
             {...p}
           />
           {isColor && (

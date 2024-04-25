@@ -122,6 +122,7 @@ function App() {
         />
         <Spacer />
         <Input
+          // hidden
           name="fileInput"
           label="File Input"
           type="file"
