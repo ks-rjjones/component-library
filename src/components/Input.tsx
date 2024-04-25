@@ -10,8 +10,8 @@ import "src/components/css/input.css";
 // [x] datetime-local
 // [x] email
 // [x] file
-// [ ] hidden
-// [ ] month
+// [x] hidden
+// [x] month
 // [ ] number
 // [ ] password
 // [x] search // TODO: Needs search icon
@@ -48,7 +48,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
   const _isEmail = useMemo(() => p.type === "email", [p.type]);
   const isFile = useMemo(() => p.type === "file", [p.type]);
   const _isHidden = useMemo(() => p.type === "hidden", [p.type]);
-  const _isMonth = useMemo(() => p.type === "month", [p.type]);
+  const isMonth = useMemo(() => p.type === "month", [p.type]);
   const _isNumber = useMemo(() => p.type === "number", [p.type]);
   const _isPassword = useMemo(() => p.type === "password", [p.type]);
   const isSearch = useMemo(() => p.type === "search", [p.type]);
@@ -70,12 +70,12 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
   }, [isColor]);
 
   const labelPos = useMemo(() => {
-    return `${p.value || isFocused || isColor || isDate || isDateTime || isFile ? "translate-y-0.5" : "translate-y-3"}`;
-  }, [p.value, isFocused, isColor, isDate, isDateTime, isFile]);
+    return `${p.value || isFocused || isColor || isDate || isDateTime || isFile || isMonth ? "translate-y-0.5" : "translate-y-3"}`;
+  }, [p.value, isFocused, isColor, isDate, isDateTime, isFile, isMonth]);
 
   const labelSize = useMemo(() => {
-    return `${(p.value || isFocused || isColor || isDate || isDateTime, isFile ? "text-xs	" : "text-base")}`;
-  }, [p.value, isFocused, isColor, isDate, isDateTime, isFile]);
+    return `${p.value || isFocused || isColor || isDate || isDateTime || isFile || isMonth ? "text-xs	" : "text-base"}`;
+  }, [p.value, isFocused, isColor, isDate, isDateTime, isFile, isMonth]);
 
   const labelVisibility = useMemo(() => {
     return `${(p.noFloat || isSearch) && "hidden"}`;

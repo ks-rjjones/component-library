@@ -12,6 +12,7 @@ function App() {
   const [dateTimeInput, setDateTimeInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
   const [fileInput, setFileInput] = useState("");
+  const [monthInput, setMonthInput] = useState("");
 
   const Spacer = () => <div className="my-2" />;
 
@@ -128,6 +129,17 @@ function App() {
           type="file"
           value={fileInput}
           onChange={(e) => setFileInput(e.target.value)}
+          noFloat
+          border
+        />
+        <Spacer />
+        <Input
+          // hidden
+          name="monthInput"
+          label="Month Input"
+          type="month"
+          value={monthInput}
+          onChange={(e) => setMonthInput(e.target.value)}
           noFloat
           border
         />
