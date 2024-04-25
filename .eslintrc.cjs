@@ -17,6 +17,17 @@ module.exports = {
   },
   plugins: ["react-refresh", "@typescript-eslint", "tailwindcss"],
   rules: {
+    "@typescript-eslint/no-confusing-void-expression": "off",
+    "@typescript-eslint/no-invalid-void-type": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      },
+    ],
+    "no-unused-vars": "off",
     "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
   },
 };
