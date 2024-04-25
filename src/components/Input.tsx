@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import "src/components/css/input.css";
 import _ from "lodash";
 
+// TODO: [ ] Add various default error messages.
+
 // TODO: Support for various types
 // [x] color
 // [x] date
@@ -14,9 +16,9 @@ import _ from "lodash";
 // [x] hidden
 // [x] month
 // [x] number
-// [ ] password
+// [x] password
 // [x] search // TODO: Needs search icon
-// [ ] tel
+// [x] tel
 // [x] text
 // [ ] time
 // [ ] url
@@ -34,6 +36,16 @@ const inputProps = [
   "isCurrency",
   "setValue",
 ];
+
+function formatPhoneNumber(phoneNumber: string) {
+  const cleaned = ("" + phoneNumber).replace(/\D/g, "");
+  const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+  if (match) {
+    const intlCode = match[1] ? "+1 " : "";
+    return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
+  }
+  return null;
+}
 
 // Note: Whenever modifying IInputProps, make sure to update the Omit lists in BOTH inputs below.
 export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -86,7 +98,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
   const isNumber = useMemo(() => p.type === "number", [p.type]);
   const _isPassword = useMemo(() => p.type === "password", [p.type]);
   const isSearch = useMemo(() => p.type === "search", [p.type]);
-  const _isTel = useMemo(() => p.type === "tel", [p.type]);
+  const isTel = useMemo(() => p.type === "tel", [p.type]);
   const _isText = useMemo(() => p.type === "text", [p.type]);
   const _isTime = useMemo(() => p.type === "time", [p.type]);
   const _isUrl = useMemo(() => p.type === "url", [p.type]);
@@ -104,12 +116,12 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
   }, [isColor]);
 
   const labelPos = useMemo(() => {
-    return `${p.value || isFocused || isColor || isDate || isDateTime || isFile || isMonth ? "translate-y-0.5" : "translate-y-3"}`;
-  }, [p.value, isFocused, isColor, isDate, isDateTime, isFile, isMonth]);
+    return `${p.value || displayValue || isFocused || isColor || isDate || isDateTime || isFile || isMonth ? "translate-y-0.5" : "translate-y-3"}`;
+  }, [p.value, displayValue, isFocused, isColor, isDate, isDateTime, isFile, isMonth]);
 
   const labelSize = useMemo(() => {
-    return `${p.value || isFocused || isColor || isDate || isDateTime || isFile || isMonth ? "text-xs	" : "text-base"}`;
-  }, [p.value, isFocused, isColor, isDate, isDateTime, isFile, isMonth]);
+    return `${p.value || displayValue || isFocused || isColor || isDate || isDateTime || isFile || isMonth ? "text-xs	" : "text-base"}`;
+  }, [p.value, displayValue, isFocused, isColor, isDate, isDateTime, isFile, isMonth]);
 
   const labelVisibility = useMemo(() => {
     return `${(p.noFloat || isSearch) && "hidden"}`;
@@ -155,7 +167,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
       <div className="relative flex flex-col items-start">
         <label
           htmlFor={inputId}
-          className={`absolute top-0 w-full ${labelPos} select-none text-start ${labelSize} ${labelVisibility} leading-none text-stone-400 transition-transform`}
+          className={`absolute top-0 w-full ${labelPos} select-none text-start ${labelSize} ${labelVisibility} pointer-events-none leading-none text-stone-400 transition-transform`}
         >
           {p.label}
         </label>
@@ -164,14 +176,13 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
           <input
             ref={ref}
             id={inputId}
-            hidden={p.hidden || isNumber}
+            hidden={p.hidden || isNumber || isTel}
             value={isColor && !p.value ? "#000000" : p.value}
             placeholder={p.noFloat || isSearch ? p.label : ""}
             className={`my-0 ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize} ${p.className}`}
-            min={p.min || 0}
+            min={isNumber ? p.min || 0 : undefined}
             onBlur={(e) => {
               setIsFocused(false);
-              // TODO: Format the input value if it is a number
               p.onBlur && p.onBlur(e);
             }}
             onChange={(e) => {
@@ -207,13 +218,14 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
           />
           <input
             id={`${inputId}-display`}
-            hidden={!isNumber}
+            hidden={!isNumber && !isTel}
             value={displayValue}
             placeholder={p.noFloat || isSearch ? p.label : ""}
             className={`my-0 ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize} ${p.className}`}
-            min={p.min || 0}
+            min={isNumber ? p.min || 0 : undefined}
             onBlur={(e) => {
               setIsFocused(false);
+
               if (isNumber) {
                 if (p.onChange && lastChangeEvent.current) {
                   lastChangeEvent.current.target.value = e.target.value;
@@ -226,18 +238,34 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
                   const nv = DecimalFormat.format(Number(e.target.value));
                   setDisplayValue(nv);
                 }
+              } else if (isTel) {
+                e.target.value = e.target.value.replace(/[^0-9]/g, "").trim();
+                if (p.onChange && lastChangeEvent.current) {
+                  lastChangeEvent.current.target.value = e.target.value;
+                  p.onChange(lastChangeEvent.current);
+                }
+                const nv = formatPhoneNumber(e.target.value);
+                // TODO: If format returns null, display error message
+                setDisplayValue(nv || e.target.value);
               }
+
+              p.onBlur && p.onBlur(e);
             }}
             onChange={(e) => {
               lastChangeEvent.current = e;
-              if (p.isInt) {
-                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-              } else if (p.isCurrency || p.isDecimal) {
-                e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+              if (isNumber) {
+                if (p.isInt) {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                } else if (p.isCurrency || p.isDecimal) {
+                  e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                }
+              } else if (isTel) {
+                e.target.value = e.target.value.replace(/[^0-9()+-]/g, "");
               }
               setDisplayValue(e.target.value);
             }}
             onFocus={(e) => {
+              console.log("FOCUSED");
               setIsFocused(true);
               p.onFocus && p.onFocus(e);
             }}

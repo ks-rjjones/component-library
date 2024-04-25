@@ -14,6 +14,8 @@ function App() {
   const [fileInput, setFileInput] = useState("");
   const [monthInput, setMonthInput] = useState("");
   const [numberInput, setNumberInput] = useState(0);
+  const [passwordInput, setPasswordInput] = useState("");
+  const [telInput, setTelInput] = useState("");
 
   const Spacer = () => <div className="my-2" />;
 
@@ -151,14 +153,33 @@ function App() {
           label="Number Input"
           type="number"
           value={numberInput}
-          onChange={(e) => {
-            console.log("returned value", e.target.value);
-            setNumberInput(Number(e.target.value));
-          }}
-          noFloat
+          onChange={(e) => setNumberInput(Number(e.target.value))}
+          // noFloat
           border
           isDecimal
           step={0.01}
+        />
+        <Spacer />
+        <Input
+          // hidden
+          name="passwordInput"
+          label="Password Input"
+          type="password"
+          value={passwordInput}
+          onChange={(e) => setPasswordInput(e.target.value)}
+          noFloat
+          border
+        />
+        <Spacer />
+        <Input
+          // hidden
+          name="telInput"
+          label="Tel Input"
+          type="tel"
+          value={telInput}
+          onChange={(e) => setTelInput(e.target.value)}
+          // noFloat
+          border
         />
         <Spacer />
       </div>
