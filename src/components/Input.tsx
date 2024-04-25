@@ -5,8 +5,8 @@ import "src/components/css/input.css";
 
 // TODO: Support for various types
 // [x] color
-// [ ] date
-// [ ] datetime-local
+// [x] date
+// [x] datetime-local
 // [ ] email
 // [ ] file
 // [ ] hidden
@@ -44,7 +44,7 @@ export default function Input(p: IInputProps) {
 
   const isColor = useMemo(() => p.type === "color", [p.type]);
   const isDate = useMemo(() => p.type === "date", [p.type]);
-  const _isDateTime = useMemo(() => p.type === "datetime-local", [p.type]);
+  const isDateTime = useMemo(() => p.type === "datetime-local", [p.type]);
   const _isEmail = useMemo(() => p.type === "email", [p.type]);
   const _isFile = useMemo(() => p.type === "file", [p.type]);
   const _isHidden = useMemo(() => p.type === "hidden", [p.type]);
@@ -67,12 +67,12 @@ export default function Input(p: IInputProps) {
   }, [isColor]);
 
   const labelPos = useMemo(() => {
-    return `${p.value || isFocused || isColor || isDate ? "translate-y-0.5" : "translate-y-3"}`;
-  }, [p.value, isFocused, isColor, isDate]);
+    return `${p.value || isFocused || isColor || isDate || isDateTime ? "translate-y-0.5" : "translate-y-3"}`;
+  }, [p.value, isFocused, isColor, isDate, isDateTime]);
 
   const labelSize = useMemo(() => {
-    return `${p.value || isFocused || isColor || isDate ? "text-xs	" : "text-base"}`;
-  }, [p.value, isFocused, isColor, isDate]);
+    return `${p.value || isFocused || isColor || isDate || isDateTime ? "text-xs	" : "text-base"}`;
+  }, [p.value, isFocused, isColor, isDate, isDateTime]);
 
   const labelVisibility = useMemo(() => {
     return `${(p.noFloat || p.type === "search") && "hidden"}`;

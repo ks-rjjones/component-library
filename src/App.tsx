@@ -9,6 +9,7 @@ function App() {
   const [searchInput, setSearchInput] = useState("");
   const [colorInput, setColorInput] = useState("");
   const [dateInput, setDateInput] = useState("");
+  const [dateTimeInput, setDateTimeInput] = useState("");
 
   const Spacer = () => <div className="my-2" />;
 
@@ -94,6 +95,16 @@ function App() {
           value={dateInput}
           onChange={setDateInput}
           noFloat
+          border
+        />
+        <Spacer />
+        <Input
+          inputName="dateTimeInput"
+          label="Date Time Input"
+          type="datetime-local"
+          value={dateTimeInput}
+          onChange={setDateTimeInput}
+          // noFloat
           border
         />
         <Spacer />
