@@ -8,7 +8,7 @@ import "src/components/css/input.css";
 // [x] date
 // [x] datetime-local
 // [x] email
-// [ ] file
+// [x] file
 // [ ] hidden
 // [ ] month
 // [ ] number
@@ -46,45 +46,48 @@ export default function Input(p: IInputProps) {
   const isDate = useMemo(() => p.type === "date", [p.type]);
   const isDateTime = useMemo(() => p.type === "datetime-local", [p.type]);
   const _isEmail = useMemo(() => p.type === "email", [p.type]);
-  const _isFile = useMemo(() => p.type === "file", [p.type]);
+  const isFile = useMemo(() => p.type === "file", [p.type]);
   const _isHidden = useMemo(() => p.type === "hidden", [p.type]);
   const _isMonth = useMemo(() => p.type === "month", [p.type]);
   const _isNumber = useMemo(() => p.type === "number", [p.type]);
   const _isPassword = useMemo(() => p.type === "password", [p.type]);
   const isSearch = useMemo(() => p.type === "search", [p.type]);
   const _isTel = useMemo(() => p.type === "tel", [p.type]);
-  const isText = useMemo(() => p.type === "text", [p.type]);
+  const _isText = useMemo(() => p.type === "text", [p.type]);
   const _isTime = useMemo(() => p.type === "time", [p.type]);
   const _isUrl = useMemo(() => p.type === "url", [p.type]);
   const _isWeek = useMemo(() => p.type === "week", [p.type]);
 
-  const colorPadding = useMemo(() => {
-    return `${isColor ? (p.noFloat ? "my-1 !p-0" : "mt-4 !p-0 mb-0.5") : ""}`;
-  }, [isColor, p.noFloat]);
+  const inputPadding = useMemo(() => {
+    if (isColor) return p.noFloat ? "my-1 !p-0" : "mt-4 !p-0 mb-0.5";
+    if (isFile) return p.noFloat ? "py-1.5" : "pt-5 pb-0.5";
+    if (p.noFloat || isSearch) return "py-1.5";
+    return "pt-4";
+  }, [isColor, isFile, isSearch, p.noFloat]);
 
-  const colorSize = useMemo(() => {
+  const inputSize = useMemo(() => {
     return `${isColor ? "size-6" : "w-full"}`;
   }, [isColor]);
 
   const labelPos = useMemo(() => {
-    return `${p.value || isFocused || isColor || isDate || isDateTime ? "translate-y-0.5" : "translate-y-3"}`;
-  }, [p.value, isFocused, isColor, isDate, isDateTime]);
+    return `${p.value || isFocused || isColor || isDate || isDateTime || isFile ? "translate-y-0.5" : "translate-y-3"}`;
+  }, [p.value, isFocused, isColor, isDate, isDateTime, isFile]);
 
   const labelSize = useMemo(() => {
-    return `${p.value || isFocused || isColor || isDate || isDateTime ? "text-xs	" : "text-base"}`;
-  }, [p.value, isFocused, isColor, isDate, isDateTime]);
+    return `${(p.value || isFocused || isColor || isDate || isDateTime, isFile ? "text-xs	" : "text-base")}`;
+  }, [p.value, isFocused, isColor, isDate, isDateTime, isFile]);
 
   const labelVisibility = useMemo(() => {
-    return `${(p.noFloat || p.type === "search") && "hidden"}`;
-  }, [p.noFloat, p.type]);
+    return `${(p.noFloat || isSearch) && "hidden"}`;
+  }, [isSearch, p.noFloat]);
 
-  const searchFont = useMemo(() => {
-    return `${p.helperText && p.type === "search" && "placeholder:italic placeholder:text-stone-400"}`;
-  }, [p.helperText, p.type]);
+  const inputFontSize = useMemo(() => {
+    return `${isFile ? "text-xs" : ""}`;
+  }, [isFile]);
 
-  const searchPadding = useMemo(() => {
-    return `${p.noFloat || p.type === "search" ? "py-1.5" : "pt-4"}`;
-  }, [p.noFloat, p.type]);
+  const placeHolderStyle = useMemo(() => {
+    return `${p.helperText && isSearch && "placeholder:text-stone-400"}`;
+  }, [isSearch, p.helperText]);
 
   const SearchIcon = () => {
     return (
@@ -109,7 +112,7 @@ export default function Input(p: IInputProps) {
 
   return (
     <div
-      className={`items-start rounded border border-transparent px-2 py-0 ${p.border && "!border-primary-500"}`}
+      className={`relative mb-6 items-start rounded border border-transparent px-2 py-0 ${p.border && "!border-primary-500"}`}
     >
       <div className="relative flex flex-col items-start">
         <label
@@ -119,13 +122,13 @@ export default function Input(p: IInputProps) {
           {p.label}
         </label>
         <div className="flex w-full items-center">
-          {p.type === "search" && <SearchIcon />}
+          {isSearch && <SearchIcon />}
           <input
             id={inputId}
             type={p.type as string}
             value={isColor && !p.value ? "#000000" : p.value}
             placeholder={p.noFloat || isSearch ? p.label : ""}
-            className={`my-0 ${colorPadding} ${colorSize} ${searchPadding} outline-none ${searchFont}`}
+            className={`my-0 ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize}`}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onChange={(e) => {
@@ -142,9 +145,13 @@ export default function Input(p: IInputProps) {
           )}
         </div>
       </div>
-      {!p.border && <hr />}
-      {/* TODO: Handle error state and text */}
-      {p.helperText && <p className="ml-6 text-left text-xs text-tertiary-600">{p.helperText}</p>}
+      {!p.border && <hr className="border-primary" />}
+      {p.errorText && (
+        <p className="absolute bottom-[] text-left text-xs text-red-600">{p.errorText}</p>
+      )}
+      {p.helperText && (
+        <p className="absolute bottom-[] text-left text-xs text-tertiary-600">{p.helperText}</p>
+      )}
     </div>
   );
 }

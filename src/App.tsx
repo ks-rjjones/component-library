@@ -11,6 +11,7 @@ function App() {
   const [dateInput, setDateInput] = useState("");
   const [dateTimeInput, setDateTimeInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
+  const [fileInput, setFileInput] = useState("");
 
   const Spacer = () => <div className="my-2" />;
 
@@ -107,6 +108,7 @@ function App() {
           onChange={setDateTimeInput}
           // noFloat
           border
+          helperText="This is a helper text for the date time input."
         />
         <Spacer />
         <Input
@@ -116,6 +118,16 @@ function App() {
           value={emailInput}
           onChange={setEmailInput}
           // noFloat
+          border
+        />
+        <Spacer />
+        <Input
+          inputName="fileInput"
+          label="File Input"
+          type="file"
+          value={fileInput}
+          onChange={setFileInput}
+          noFloat
           border
         />
         <Spacer />
