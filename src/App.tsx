@@ -45,88 +45,88 @@ function App() {
       <h1 className="text-start">Inputs</h1>
       <div className="max-w-[60%]">
         <Input
-          inputName="textInput"
+          name="textInput"
           label="Text Input"
           type="text"
           value={textInput}
-          onChange={setTextInput}
+          onChange={(e) => setTextInput(e.target.value)}
         />
         <Spacer />
         <Input
-          inputName="textInputWithBorder"
+          name="textInputWithBorder"
           label="Text Input With Border"
           type="text"
           value={textInput}
-          onChange={setTextInput}
+          onChange={(e) => setTextInput(e.target.value)}
           border
         />
         <Spacer />
         <Input
-          inputName="textInputWithoutFloatingLabel"
+          name="textInputWithoutFloatingLabel"
           label="Text Input Without Floating Label"
           type="text"
           value={textInput}
-          onChange={setTextInput}
+          onChange={(e) => setTextInput(e.target.value)}
           border
           noFloat
         />
         <Spacer />
         <Input
-          inputName="searchInput"
+          name="searchInput"
           label="Search Input"
           type="search"
           value={searchInput}
-          onChange={setSearchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           border
         />
         <Spacer />
         <Input
-          inputName="colorInput"
+          name="colorInput"
           label="Color Input"
           type="color"
           value={colorInput}
-          onChange={setColorInput}
+          onChange={(e) => setColorInput(e.target.value)}
           border
           // noFloat
         />
         <Spacer />
         <Input
-          inputName="dateInput"
+          name="dateInput"
           label="Date Input"
           type="date"
           value={dateInput}
-          onChange={setDateInput}
+          onChange={(e) => setDateInput(e.target.value)}
           // noFloat
           border
         />
         <Spacer />
         <Input
-          inputName="dateTimeInput"
+          name="dateTimeInput"
           label="Date Time Input"
           type="datetime-local"
           value={dateTimeInput}
-          onChange={setDateTimeInput}
+          onChange={(e) => setDateTimeInput(e.target.value)}
           // noFloat
           border
           helperText="This is a helper text for the date time input."
         />
         <Spacer />
         <Input
-          inputName="emailInput"
+          name="emailInput"
           label="Email Input"
           type="email"
           value={emailInput}
-          onChange={setEmailInput}
+          onChange={(e) => setEmailInput(e.target.value)}
           // noFloat
           border
         />
         <Spacer />
         <Input
-          inputName="fileInput"
+          name="fileInput"
           label="File Input"
           type="file"
           value={fileInput}
-          onChange={setFileInput}
+          onChange={(e) => setFileInput(e.target.value)}
           noFloat
           border
         />

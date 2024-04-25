@@ -1,4 +1,5 @@
 /* eslint-disable tailwindcss/no-unnecessary-arbitrary-value */
+import React from "react";
 import { useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "src/components/css/input.css";
@@ -20,22 +21,21 @@ import "src/components/css/input.css";
 // [ ] url
 // [ ] week
 
-export interface IInputProps {
-  inputName: string;
-  label: string;
-  value: string;
-  type: Omit<
-    React.HTMLInputTypeAttribute,
-    "button" | "checkbox" | "image" | "radio" | "range" | "reset" | "submit"
-  >;
+const invalidInputTypes = ["button", "checkbox", "image", "radio", "range", "reset", "submit"];
+
+export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
   helperText?: string;
   errorText?: string;
   border?: boolean;
   noFloat?: boolean;
-  onChange?: (value: string) => void;
 }
 
-export default function Input(p: IInputProps) {
+const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, ref) => {
+  if (p.type && invalidInputTypes.includes(p.type.toString())) {
+    throw new Error(`Invalid input type: ${p.type}`);
+  }
+
   const inputId = useMemo(() => {
     return `input-${uuidv4()}`;
   }, []);
@@ -124,6 +124,7 @@ export default function Input(p: IInputProps) {
         <div className="flex w-full items-center">
           {isSearch && <SearchIcon />}
           <input
+            ref={ref}
             id={inputId}
             type={p.type as string}
             value={isColor && !p.value ? "#000000" : p.value}
@@ -131,12 +132,7 @@ export default function Input(p: IInputProps) {
             className={`my-0 ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize}`}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            onChange={(e) => {
-              if (p.onChange) {
-                // TODO: Logic for modify the value depending on the type.
-                p.onChange(e.target.value);
-              }
-            }}
+            {...p}
           />
           {isColor && (
             <span className={`${p.noFloat ? "my-1 ml-1" : "ml-1 mt-4"}`}>
@@ -154,4 +150,6 @@ export default function Input(p: IInputProps) {
       )}
     </div>
   );
-}
+});
+
+export default Input;
