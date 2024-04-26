@@ -159,8 +159,8 @@ function App() {
           onChange={(e) => setNumberInput(Number(e.target.value))}
           // noFloat
           border
-          isDecimal
-          step={0.01}
+          isCurrency
+          currencyType="USD"
         />
         <Spacer />
         <Input

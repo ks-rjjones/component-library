@@ -232,16 +232,18 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
               setIsFocused(false);
 
               if (isNumber) {
+                e.target.value = e.target.value.replace(/[^0-9.]/g, "").trim();
                 if (p.onChange && lastChangeEvent.current) {
                   lastChangeEvent.current.target.value = e.target.value;
                   p.onChange(lastChangeEvent.current);
                 }
                 if (p.isCurrency) {
                   const nv = CurrencyFormat.format(Number(e.target.value));
-                  setDisplayValue(nv);
+                  console.log("Currency Format", nv);
+                  setDisplayValue(nv); // TODO: If format returns null, display error message
                 } else if (p.isDecimal) {
                   const nv = DecimalFormat.format(Number(e.target.value));
-                  setDisplayValue(nv);
+                  setDisplayValue(nv); // TODO: If format returns null, display error message
                 }
               } else if (isTel) {
                 e.target.value = e.target.value.replace(/[^0-9]/g, "").trim();
@@ -250,8 +252,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
                   p.onChange(lastChangeEvent.current);
                 }
                 const nv = formatPhoneNumber(e.target.value);
-                // TODO: If format returns null, display error message
-                setDisplayValue(nv || e.target.value);
+                setDisplayValue(nv || e.target.value); // TODO: If format returns null, display error message
               }
 
               p.onBlur && p.onBlur(e);
