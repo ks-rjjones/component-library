@@ -1,10 +1,7 @@
-import "./App.css";
 import { useState } from "react";
-import Checkbox from "src/components/Checkbox";
-import Input from "src/components/Input";
+import Input from "src/components/input";
 
-function App() {
-  const [checkbox, setCheckbox] = useState(false);
+export default function InputPage() {
   const [textInput, setTextInput] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [colorInput, setColorInput] = useState("");
@@ -14,6 +11,8 @@ function App() {
   const [fileInput, setFileInput] = useState("");
   const [monthInput, setMonthInput] = useState("");
   const [numberInput, setNumberInput] = useState(0);
+  const [decimalInput, setDecimalInput] = useState(0.0);
+  const [currencyInput, setCurrencyInput] = useState(0.0);
   const [passwordInput, setPasswordInput] = useState("");
   const [telInput, setTelInput] = useState("");
   const [timeInput, setTimeInput] = useState("");
@@ -24,39 +23,15 @@ function App() {
 
   return (
     <>
-      <h1 className="text-start">Checkboxes</h1>
-      <div className="max-w-[60%]">
-        <Checkbox label="Checkbox" checked={checkbox} onChange={setCheckbox} />
-        <Spacer />
-        <Checkbox label="Checkbox with a border" checked={checkbox} onChange={setCheckbox} border />
-        <Spacer />
-        <Checkbox
-          label="Checkbox with subtext"
-          checked={checkbox}
-          onChange={setCheckbox}
-          subtext="This is subtext about this checkbox."
-        />
-        <Spacer />
-        <Checkbox
-          label="Checkbox with subtext and a border"
-          checked={checkbox}
-          onChange={setCheckbox}
-          subtext="This is subtext about this checkbox. Also has a border."
-          border
-        />
-        <Spacer />
-      </div>
-      <br />
-      <hr />
-      <br />
-      <h1 className="text-start">Inputs</h1>
-      <div className="max-w-[60%]">
+      <h1 className="m-6 mb-12 text-start text-4xl">Inputs</h1>
+      <div className="">
         <Input
           name="textInput"
           label="Text Input"
           type="text"
           value={textInput}
           onChange={(e) => setTextInput(e.target.value)}
+          style={{ width: "200px" }}
         />
         <Spacer />
         <Input
@@ -146,21 +121,41 @@ function App() {
           type="month"
           value={monthInput}
           onChange={(e) => setMonthInput(e.target.value)}
-          noFloat
+          // noFloat
           border
         />
         <Spacer />
         <Input
           // hidden
-          name="numberInput"
-          label="Number Input"
+          name="integerInput"
+          label="Integer Input"
           type="number"
           value={numberInput}
           onChange={(e) => setNumberInput(Number(e.target.value))}
-          // noFloat
           border
-          isCurrency
+        />
+        <Spacer />
+        <Input
+          // hidden
+          name="decimalInput"
+          label="Decimal Input"
+          type="number"
+          value={decimalInput}
+          onChange={(e) => setDecimalInput(Number(e.target.value))}
+          border
+          decimalPlaces={2}
+        />
+        <Spacer />
+        <Input
+          // hidden
+          name="currencyInput"
+          label="Currency Input"
+          type="number"
+          value={currencyInput}
+          onChange={(e) => setCurrencyInput(Number(e.target.value))}
+          border
           currencyType="USD"
+          isCurrency
         />
         <Spacer />
         <Input
@@ -170,7 +165,7 @@ function App() {
           type="password"
           value={passwordInput}
           onChange={(e) => setPasswordInput(e.target.value)}
-          noFloat
+          // noFloat
           border
         />
         <Spacer />
@@ -222,5 +217,3 @@ function App() {
     </>
   );
 }
-
-export default App;

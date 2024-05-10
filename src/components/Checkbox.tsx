@@ -17,7 +17,7 @@ export default function Checkbox(p: ICheckboxProps) {
 
   return (
     <div
-      className={`items-start rounded border p-2 ${p.border ? "border-primary-500" : "border-transparent"}`}
+      className={`w-fit items-start rounded border p-2 ${p.border ? "border-primary-500" : "border-transparent"}`}
     >
       <div className="flex items-center">
         <input

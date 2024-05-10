@@ -1,9 +1,9 @@
 /* eslint-disable tailwindcss/no-unnecessary-arbitrary-value */
-import React, { useRef } from "react";
+import _ from "lodash";
+import "src/components/css/input.css";
 import { useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import "src/components/css/input.css";
-import _ from "lodash";
+import React, { useRef } from "react";
 
 // TODO: [ ] Add various default error messages.
 
@@ -14,8 +14,7 @@ const inputProps = [
   "errorText",
   "border",
   "noFloat",
-  "isInt",
-  "isDecimal",
+  "decimalPlaces",
   "isCurrency",
   "setValue",
 ];
@@ -37,8 +36,7 @@ export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement>
   errorText?: string;
   border?: boolean;
   noFloat?: boolean;
-  isInt?: boolean;
-  isDecimal?: boolean;
+  decimalPlaces?: number;
   isCurrency?: boolean;
   currencyType?: string;
 }
@@ -54,6 +52,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
 
   const lastChangeEvent = useRef<React.ChangeEvent<HTMLInputElement> | null>(null); // used for manually calling onChange
   const [displayValue, setDisplayValue] = useState<string>(""); // used for number inputs
+
   const CurrencyFormat = useMemo(() => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -65,12 +64,13 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
   const DecimalFormat = useMemo(() => {
     return new Intl.NumberFormat("en-US", {
       style: "decimal",
-      maximumFractionDigits: 2,
+      maximumFractionDigits: p.decimalPlaces || 0,
     });
-  }, []);
+  }, [p.decimalPlaces]);
 
   const [isFocused, setIsFocused] = useState(false);
 
+  // Type of input
   const isColor = useMemo(() => p.type === "color", [p.type]);
   const isDate = useMemo(() => p.type === "date", [p.type]);
   const isDateTime = useMemo(() => p.type === "datetime-local", [p.type]);
@@ -167,7 +167,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
 
   return (
     <div
-      className={`relative mb-6 items-start rounded border border-transparent px-2 py-0 ${p.border && "!border-primary-500"} ${hidden}`}
+      className={`relative mb-6 max-w-[300px] items-start rounded border border-transparent px-2 py-0 ${p.border && "!border-primary-500"} ${hidden}`}
     >
       <div className="relative flex flex-col items-start">
         <label
@@ -241,7 +241,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
                   const nv = CurrencyFormat.format(Number(e.target.value));
                   console.log("Currency Format", nv);
                   setDisplayValue(nv); // TODO: If format returns null, display error message
-                } else if (p.isDecimal) {
+                } else if (p.decimalPlaces) {
                   const nv = DecimalFormat.format(Number(e.target.value));
                   setDisplayValue(nv); // TODO: If format returns null, display error message
                 }
@@ -260,10 +260,10 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
             onChange={(e) => {
               lastChangeEvent.current = e;
               if (isNumber) {
-                if (p.isInt) {
-                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                } else if (p.isCurrency || p.isDecimal) {
+                if (p.isCurrency || p.decimalPlaces) {
                   e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                } else {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
                 }
               } else if (isTel) {
                 e.target.value = e.target.value.replace(/[^0-9()+-]/g, "");
