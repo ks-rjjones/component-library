@@ -1,0 +1,23 @@
+.list-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.list-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
+
+.list-scrollbar::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 6px;
+}
+
+.list-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+/* For Firefox */
+.list-scrollbar {
+  scrollbar-width: 8px;
+  scrollbar-gutter: 8px;
+}

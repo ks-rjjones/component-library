@@ -1,44 +1,28 @@
 import React from "react";
-import { List, ListRowRenderer } from "react-virtualized";
+import { FixedSizeList, ListChildComponentProps, FixedSizeListProps } from "react-window";
 
-interface CustomListItemProps<T> {
+export interface ListItemProps<T> {
   index: number;
-  style: React.CSSProperties;
   data: T;
 }
 
-interface VirtualizedListProps<T> {
-  height: number;
-  width: number;
-  rowCount: number;
-  rowHeight: number;
+export interface ListProps<T> extends Omit<FixedSizeListProps, "children"> {
   data: T[];
-  ListItemComponent: React.ComponentType<CustomListItemProps<T>>;
+  ListItemComponent: React.ComponentType<ListItemProps<T>>;
 }
 
-const VirtualizedList = <T,>({
-  height,
-  width,
-  rowCount,
-  rowHeight,
-  data,
-  ListItemComponent,
-}: VirtualizedListProps<T>) => {
-  const rowRenderer: ListRowRenderer = ({ index, key, style }) => (
-    <div key={key} style={style}>
-      <ListItemComponent index={index} style={style} data={data[index]} />
+const List = <T,>({ data, ListItemComponent, ...rest }: ListProps<T>) => {
+  const Row = ({ index, style }: ListChildComponentProps) => (
+    <div style={style}>
+      <ListItemComponent index={index} data={data[index]} />
     </div>
   );
 
   return (
-    <List
-      height={height}
-      width={width}
-      rowCount={rowCount}
-      rowHeight={rowHeight}
-      rowRenderer={rowRenderer}
-    />
+    <FixedSizeList {...rest} className="list-scrollbar">
+      {Row}
+    </FixedSizeList>
   );
 };
 
-export default VirtualizedList;
+export default List;

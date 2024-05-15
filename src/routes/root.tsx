@@ -21,6 +21,9 @@ export default function Root() {
             <li>
               <a href={`/components/input`}>Input</a>
             </li>
+            <li>
+              <a href={`/components/list`}>List</a>
+            </li>
           </ul>
         </nav>
       </div>

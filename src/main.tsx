@@ -1,4 +1,4 @@
-import "./index.css";
+import "./main.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -6,6 +6,7 @@ import Root from "src/routes/root";
 import ErrorPage from "src/pages/errorPage";
 import CheckboxPage from "src/pages/checkboxPage";
 import InputPage from "src/pages/inputPage";
+import ListPage from "src/pages/listPage";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "components/input",
         element: <InputPage />,
+      },
+      {
+        path: "components/list",
+        element: <ListPage />,
       },
     ],
   },
