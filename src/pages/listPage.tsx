@@ -17,16 +17,21 @@ export default function ListPage() {
       new Array(1000).fill(null).map((_, id) => ({
         id: id,
         title: faker.lorem.words(5),
-        body: faker.lorem.sentences(3),
+        body: faker.lorem.words(12),
       }))
     );
   }, []);
 
   const ListItemComponent = ({ data }: ListItemProps<ListItemData>) => {
     return (
-      <div className="h-[112px] cursor-default hover:bg-primary-100">
-        <h6>{data.title}</h6>
-        <p>{data.body}</p>
+      <div className="relative h-[100px] w-full cursor-default overflow-hidden hover:bg-tertiary-100">
+        <h3 className="cursor-default select-none overflow-hidden text-ellipsis text-nowrap p-4 text-left text-lg font-medium">
+          {data.title}
+        </h3>
+        <p className="line-clamp-2 cursor-default select-none px-4 text-left text-base leading-none text-tertiary-700">
+          {data.body}
+        </p>
+        <hr className="absolute inset-x-2 bottom-0" />
       </div>
     );
   };
@@ -35,16 +40,19 @@ export default function ListPage() {
 
   return (
     <>
-      <h1 className="text-start">Lists</h1>
-      <div className="w-full">
+      <h1 className="mb-4 text-start text-4xl">Lists</h1>
+      <div className="flex max-w-fit bg-white">
         <List<ListItemData>
           height={600}
-          width={600}
+          width={400}
           itemCount={listData.length}
-          itemSize={112}
+          itemSize={100}
           data={listData}
           ListItemComponent={ListItemComponent}
-          style={{ boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)", borderRadius: "6px" }}
+          style={{
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+            borderRadius: "6px",
+          }}
         />
         <Spacer />
       </div>

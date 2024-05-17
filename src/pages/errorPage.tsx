@@ -6,7 +6,7 @@ export default function ErrorPage() {
 
   return (
     <div className="flex h-full flex-col justify-center">
-      <h1 className="text-4xl">Oops!</h1>
+      <h1 className="mb-4 text-start text-4xl">Oops!</h1>
       <p>Sorry, an unexpected error has occurred.</p>
       <p>
         <i>

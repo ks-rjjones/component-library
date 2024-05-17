@@ -23,7 +23,7 @@ export default function InputPage() {
 
   return (
     <>
-      <h1 className="m-6 mb-12 text-start text-4xl">Inputs</h1>
+      <h1 className="mb-4 text-start text-4xl">Inputs</h1>
       <div className="">
         <Input
           name="textInput"

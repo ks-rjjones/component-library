@@ -8,7 +8,7 @@ export default function CheckboxPage() {
 
   return (
     <>
-      <h1 className="text-start">Checkboxes</h1>
+      <h1 className="mb-4 text-start text-2xl">Checkboxes</h1>
       <div className="max-w-[60%]">
         <Checkbox label="Checkbox" checked={checkbox} onChange={setCheckbox} />
         <Spacer />
