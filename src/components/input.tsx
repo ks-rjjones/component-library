@@ -252,7 +252,6 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
                 }
                 if (p.isCurrency) {
                   const nv = CurrencyFormat.format(Number(e.target.value));
-                  console.log("Currency Format", nv);
                   setDisplayValue(nv); // TODO: If format returns null, display error message
                 } else if (p.decimalPlaces) {
                   const nv = DecimalFormat.format(Number(e.target.value));
