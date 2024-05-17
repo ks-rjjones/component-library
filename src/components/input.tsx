@@ -5,8 +5,7 @@ import { useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import React, { useRef } from "react";
 
-// TODO: [ ] Add various default error messages.
-
+// Used for typing the input component while omitting specific input types
 const unsupportedInputTypes = ["button", "checkbox", "image", "radio", "range", "reset", "submit"];
 const inputProps = [
   "label",
@@ -16,20 +15,11 @@ const inputProps = [
   "noFloat",
   "decimalPlaces",
   "isCurrency",
-  "setValue",
+  "currencyType",
 ];
 
-function formatPhoneNumber(phoneNumber: string) {
-  const cleaned = ("" + phoneNumber).replace(/\D/g, "");
-  const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-  if (match) {
-    const intlCode = match[1] ? "+1 " : "";
-    return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
-  }
-  return null;
-}
-
-// Note: Whenever modifying IInputProps, make sure to update the Omit lists in BOTH inputs below.
+// IMPORTANT: Whenever modifying IInputProps, you must update the Omit lists in BOTH input elements
+// below. You will also need to update the inputProps list above.
 export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   helperText?: string;
@@ -68,9 +58,11 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
     });
   }, [p.decimalPlaces]);
 
+  // Used for border styling and label size and positioning
   const [isFocused, setIsFocused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
-  // Type of input
+  // Type of input, used for styling
   const isColor = useMemo(() => p.type === "color", [p.type]);
   const isDate = useMemo(() => p.type === "date", [p.type]);
   const isDateTime = useMemo(() => p.type === "datetime-local", [p.type]);
@@ -87,6 +79,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
   const _isUrl = useMemo(() => p.type === "url", [p.type]);
   const isWeek = useMemo(() => p.type === "week", [p.type]);
 
+  // dynamic styling
   const inputPadding = useMemo(() => {
     if (isColor) return p.noFloat ? "my-1 !p-0" : "mt-4 !p-0 mb-0.5";
     if (isFile) return p.noFloat ? "py-1.5" : "pt-5 pb-0.5";
@@ -94,10 +87,12 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
     return "pt-4";
   }, [isColor, isFile, isSearch, p.noFloat]);
 
+  // dynamic styling
   const inputSize = useMemo(() => {
     return `${isColor ? "size-6" : "w-full"}`;
   }, [isColor]);
 
+  // dynamic styling
   const labelPos = useMemo(() => {
     return `${p.value || displayValue || isFocused || isColor || isDate || isDateTime || isFile || isMonth || isTime || isWeek ? "translate-y-0.5" : "translate-y-3"}`;
   }, [
@@ -113,6 +108,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
     isWeek,
   ]);
 
+  // dynamic styling
   const labelSize = useMemo(() => {
     return `${p.value || displayValue || isFocused || isColor || isDate || isDateTime || isFile || isMonth || isTime || isWeek ? "text-xs	" : "text-base"}`;
   }, [
@@ -128,18 +124,22 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
     isWeek,
   ]);
 
+  // dynamic styling
   const labelVisibility = useMemo(() => {
     return `${(p.noFloat || isSearch) && "hidden"}`;
   }, [isSearch, p.noFloat]);
 
+  // dynamic styling
   const inputFontSize = useMemo(() => {
     return `${isFile ? "text-xs" : ""}`;
   }, [isFile]);
 
+  // dynamic styling
   const placeHolderStyle = useMemo(() => {
     return `${p.helperText && isSearch && "placeholder:text-stone-400"}`;
   }, [isSearch, p.helperText]);
 
+  // dynamic styling
   const hidden = useMemo(() => {
     return `${p.hidden ? "!hidden !border-transparent" : ""}`;
   }, [p.hidden]);
@@ -167,7 +167,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
 
   return (
     <div
-      className={`relative mb-6 max-w-[300px] items-start rounded border border-transparent px-2 py-0 ${p.border && "!border-primary-500"} ${hidden}`}
+      className={`relative mb-6 max-w-[300px] items-start rounded px-2 py-0 ${p.border ? `border-2 ${isHovered ? "border-tertiary-600" : "border-tertiary-500"} ${isFocused ? "!border-primary" : ""}` : "border-2 border-transparent"} ${hidden}`}
     >
       <div className="relative flex flex-col items-start">
         <label
@@ -176,7 +176,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
         >
           {p.label}
         </label>
-        <div className="flex w-full items-center">
+        <div className="flex w-full items-center bg-transparent">
           {isSearch && <SearchIcon />}
           <input
             ref={ref}
@@ -184,7 +184,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
             hidden={p.hidden || isNumber || isTel}
             value={isColor && !p.value ? "#000000" : p.value}
             placeholder={p.noFloat || isSearch ? p.label : ""}
-            className={`my-0 ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize} ${p.className}`}
+            className={`my-0 w-full ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize} ${p.className} bg-transparent`}
             min={isNumber ? p.min || 0 : undefined}
             onBlur={(e) => {
               setIsFocused(false);
@@ -197,6 +197,14 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
               setIsFocused(true);
               p.onFocus && p.onFocus(e);
             }}
+            onMouseEnter={(e) => {
+              setIsHovered(true);
+              p.onMouseEnter && p.onMouseEnter(e);
+            }}
+            onMouseLeave={(e) => {
+              setIsHovered(false);
+              p.onMouseLeave && p.onMouseLeave(e);
+            }}
             onKeyDown={(e) => {
               // TODO: Handle Enter key press. If the form is complete, submit the form. If the form is incomplete,
               // TODO: focus the next required input.
@@ -206,15 +214,20 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
               e.currentTarget.blur(); // prevent scrolling from changing the input
               p.onWheel && p.onWheel(e);
             }}
+            // IMPORTANT: Must omit props that
+            // 1. Must have funcitonality in this component as well as a callback (above)
+            // 2. Are not input props
             {..._.omit(p, [
               ...inputProps,
               "className",
               "currencyType",
               "hidden",
               "min",
-              "onBlur", // must remove props and manually merge behavior above
-              "onChange", // if not, the default behavior will never be called
+              "onBlur",
+              "onChange",
               "onFocus",
+              "onMouseEnter",
+              "onMouseLeave",
               "onKeyDown",
               "onWheel",
               "placeholder",
@@ -226,7 +239,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
             hidden={!isNumber && !isTel}
             value={displayValue}
             placeholder={p.noFloat || isSearch ? p.label : ""}
-            className={`my-0 ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize} ${p.className}`}
+            className={`my-0 w-full ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize} ${p.className} bg-transparent`}
             min={isNumber ? p.min || 0 : undefined}
             onBlur={(e) => {
               setIsFocused(false);
@@ -271,9 +284,16 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
               setDisplayValue(e.target.value);
             }}
             onFocus={(e) => {
-              console.log("FOCUSED");
               setIsFocused(true);
               p.onFocus && p.onFocus(e);
+            }}
+            onMouseEnter={(e) => {
+              setIsHovered(true);
+              p.onMouseEnter && p.onMouseEnter(e);
+            }}
+            onMouseLeave={(e) => {
+              setIsHovered(false);
+              p.onMouseLeave && p.onMouseLeave(e);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") e.currentTarget.blur();
@@ -284,15 +304,20 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
               p.onWheel && p.onWheel(e);
             }}
             type="text"
+            // IMPORTANT: Must omit props that
+            // 1. Must have funcitonality in this component as well as a callback (above)
+            // 2. Are not input props
             {..._.omit(p, [
               ...inputProps,
               "className",
               "currencyType",
               "hidden",
               "min",
-              "onBlur", // must remove props and manually merge behavior above
-              "onChange", // if not, the default behavior will never be called
+              "onBlur",
+              "onChange",
               "onFocus",
+              "onMouseEnter",
+              "onMouseLeave",
               "onKeyDown",
               "onWheel",
               "placeholder",
@@ -307,7 +332,11 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
           )}
         </div>
       </div>
-      {!p.border && <hr className="border-primary" />}
+      {!p.border && (
+        <hr
+          className={`border ${isHovered ? "border-tertiary-600" : "border-tertiary-500"} ${isFocused ? "!border-primary" : ""}`}
+        />
+      )}
       {p.errorText && (
         <p className="absolute bottom-[] text-left text-xs text-red-600">{p.errorText}</p>
       )}
@@ -319,3 +348,13 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
 });
 
 export default Input;
+
+function formatPhoneNumber(phoneNumber: string) {
+  const cleaned = ("" + phoneNumber).replace(/\D/g, "");
+  const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+  if (match) {
+    const intlCode = match[1] ? "+1 " : "";
+    return [intlCode, "(", match[2], ") ", match[3], "-", match[4]].join("");
+  }
+  return null;
+}
