@@ -1,30 +1,33 @@
-# React + TypeScript + Vite
+# BatCode Component Library (Vite + React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Table of Contents
 
-Currently, two official plugins are available:
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Prerequisites
 
-## Expanding the ESLint configuration
+To work on this repository you should use the following tools to have a pleasant developer experience. This repository relies on the ESLint and Prettier extensions to be installed and enabled for consistent type checking and formatting across multiple developers. Instead of npm this project utilizes pnpm as a package manager, so you should also be using pnpm if you intend to contribute.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+!! NPM AND PNPM DO NOT SHARE LOCK FILES !!
 
-- Configure the top-level `parserOptions` property like this:
+This means you have to use pnpm to utilize the existing lock file generated for this repository. Using the existing lock file is important for dependency version locking, reproducible builds, faster installation, audit trails, and [more](https://docs.npmjs.com/cli/v6/configuring-npm/package-locks).
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+- VSCode (https://code.visualstudio.com/)
+- ESLint (https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- Prettier Extension (https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- pnpm (https://pnpm.io/installation)
+
+- ## Getting Started
+
+Navigate to the project folder
+
+```bash
+cd component-library
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Run a locally (this will install dependencies)
+
+```bash
+pnpm run dev
+```
