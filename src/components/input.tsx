@@ -178,6 +178,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
         </label>
         <div className="flex w-full items-center bg-transparent">
           {isSearch && <SearchIcon />}
+          {/* IMPORTANT: If you change something about this input, make the same change on the second input. */}
           <input
             ref={ref}
             id={inputId}
