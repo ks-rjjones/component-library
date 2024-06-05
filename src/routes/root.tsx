@@ -16,6 +16,9 @@ export default function Root() {
         <nav className="flex flex-col">
           <ul>
             <li>
+              <Link to={`/components/button`}>Button</Link>
+            </li>
+            <li>
               <Link to={`/components/checkbox`}>Checkbox</Link>
             </li>
             <li>

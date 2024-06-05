@@ -1,12 +1,13 @@
 import "./main.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import CheckboxPage from "src/pages/checkboxPage";
+import ErrorPage from "src/pages/errorPage";
+import InputPage from "src/pages/inputPage";
+import ListPage from "src/pages/listPage";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Root from "src/routes/root";
-import ErrorPage from "src/pages/errorPage";
-import CheckboxPage from "src/pages/checkboxPage";
-import InputPage from "src/pages/inputPage";
-import ListPage from "src/pages/listPage";
+import ButtonPage from "src/pages/buttonPage";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "components/button",
+        element: <ButtonPage />,
+      },
       {
         path: "components/checkbox",
         element: <CheckboxPage />,

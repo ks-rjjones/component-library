@@ -185,7 +185,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
             hidden={p.hidden || isNumber || isTel}
             value={isColor && !p.value ? "#000000" : p.value}
             placeholder={p.noFloat || isSearch ? p.label : ""}
-            className={`my-0 w-full ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize} ${p.className} bg-transparent`}
+            className={`my-0 w-full ${inputPadding} ${inputSize} outline-none ${placeHolderStyle} ${inputFontSize} ${p.className} bg-transparent ${p.className}`}
             min={isNumber ? p.min || 0 : undefined}
             onBlur={(e) => {
               setIsFocused(false);
