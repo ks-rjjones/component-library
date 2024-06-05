@@ -3,16 +3,18 @@ import React, { useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 // TODO
-// [ ] Icon button (icon only, start icon, end icon)
+// [X] Icon button (icon only, start icon, end icon)
 // [ ] Default styling options (outlined, filled, text)
 
 // Used for typing the button component
-const inputProps = ["text"];
+const inputProps = ["text", "leftElement", "rightElement"];
 
 // IMPORTANT: Whenever modifying IButtonProps, you must update the Omit lists in the button element
 // below. You will also need to update the inputProps list above.
 export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
+  leftElement?: React.ReactNode;
+  rightElement?: React.ReactNode;
 }
 
 const Input = React.forwardRef<HTMLButtonElement, IButtonProps>((p: IButtonProps, ref) => {
@@ -47,7 +49,8 @@ const Input = React.forwardRef<HTMLButtonElement, IButtonProps>((p: IButtonProps
     <button
       ref={ref}
       id={buttonId}
-      className={`w-fit rounded ${border} ${bgColor} px-4 py-2 ${textColor} ${shadow} ${brightness} ${p.className}`}
+      className={`w-fit rounded ${border} ${bgColor} p-2 ${textColor} ${shadow} ${brightness} ${p.className}`}
+      // className={`w-fit rounded border-2 bg-primary-500 px-4 py-2 text-primary-100 shadow-sm`}
       onBlur={(e) => {
         setIsHovered(false);
         p.onBlur && p.onBlur(e);
@@ -81,7 +84,15 @@ const Input = React.forwardRef<HTMLButtonElement, IButtonProps>((p: IButtonProps
         "onMouseUp",
       ])}
     >
-      {p.text && p.text}
+      <div className="flex items-center">
+        {p.leftElement && (
+          <div className="flex min-w-[24px] flex-none justify-center">{p.leftElement}</div>
+        )}
+        {p.text && <div className="mx-2 flex grow justify-center">{p.text}</div>}
+        {p.rightElement && (
+          <div className="flex min-w-[24px] flex-none justify-center">{p.rightElement}</div>
+        )}
+      </div>
     </button>
   );
 });

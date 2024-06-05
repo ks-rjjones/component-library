@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Button from "src/components/button";
+import { BeakerIcon, StarIcon } from "@heroicons/react/24/solid";
 
 export default function ButtonPage() {
   const Spacer = () => <div className="my-2" />;
@@ -17,6 +18,18 @@ export default function ButtonPage() {
           />
           <div>clicked {normalButtonClicks} times</div>
         </div>
+        <Spacer />
+        <Button text="Button With Left Icon" leftElement={<BeakerIcon />} />
+        <Spacer />
+        <Button text="Button With Right Icon" rightElement={<BeakerIcon />} />
+        <Spacer />
+        <Button
+          text="Button With Left & Right Icons"
+          leftElement={<BeakerIcon />}
+          rightElement={<BeakerIcon />}
+        />
+        <Spacer />
+        <Button leftElement={<StarIcon />} />
         <Spacer />
       </div>
     </>
