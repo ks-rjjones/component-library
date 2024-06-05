@@ -2,7 +2,6 @@
 import _ from "lodash";
 import "src/components/css/input.css";
 import { useMemo, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import React, { useRef } from "react";
 
 // Used for typing the input component while omitting specific input types
@@ -36,9 +35,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
     throw new Error(`Invalid input type: ${p.type}`);
   }
 
-  const inputId = useMemo(() => {
-    return `input-${uuidv4()}`;
-  }, []);
+  const inputId = useMemo(() => _.uniqueId("ui-input-"), []);
 
   const lastChangeEvent = useRef<React.ChangeEvent<HTMLInputElement> | null>(null); // used for manually calling onChange
   const [displayValue, setDisplayValue] = useState<string>(""); // used for number inputs

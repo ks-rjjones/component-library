@@ -1,6 +1,5 @@
 import _ from "lodash";
 import React, { useMemo, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 // TODO
 // [X] Icon button (icon only, start icon, end icon)
@@ -18,9 +17,7 @@ export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
 }
 
 const Input = React.forwardRef<HTMLButtonElement, IButtonProps>((p: IButtonProps, ref) => {
-  const buttonId = useMemo(() => {
-    return `checkbox-${uuidv4()}`;
-  }, []);
+  const buttonId = useMemo(() => _.uniqueId("ui-button-"), []);
 
   const [isClicked, setIsClicked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);

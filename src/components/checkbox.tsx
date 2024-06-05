@@ -1,7 +1,7 @@
 // This lint ignore is to allow negative values (e.g. after:checked:translate-y-[-50%])
 /* eslint-disable tailwindcss/no-unnecessary-arbitrary-value */
+import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 export interface ICheckboxProps {
   label: string;
@@ -12,9 +12,7 @@ export interface ICheckboxProps {
 }
 
 export default function Checkbox(p: ICheckboxProps) {
-  const checkboxId = useMemo(() => {
-    return `checkbox-${uuidv4()}`;
-  }, []);
+  const checkboxId = useMemo(() => _.uniqueId("ui-checkbox-"), []);
 
   const [isHovered, setIsHovered] = useState(false);
 
