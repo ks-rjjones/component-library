@@ -16,7 +16,7 @@ export interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   rightElement?: React.ReactNode;
 }
 
-const Input = React.forwardRef<HTMLButtonElement, IButtonProps>((p: IButtonProps, ref) => {
+const Button = React.forwardRef<HTMLButtonElement, IButtonProps>((p: IButtonProps, ref) => {
   const buttonId = useMemo(() => _.uniqueId("ui-button-"), []);
 
   const [isClicked, setIsClicked] = useState(false);
@@ -94,4 +94,4 @@ const Input = React.forwardRef<HTMLButtonElement, IButtonProps>((p: IButtonProps
   );
 });
 
-export default Input;
+export default Button;

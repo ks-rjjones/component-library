@@ -27,6 +27,9 @@ export default function Root() {
             <li>
               <Link to={`/components/list`}>List</Link>
             </li>
+            <li>
+              <Link to={`/components/form`}>Form Example</Link>
+            </li>
           </ul>
         </nav>
       </div>

@@ -1,7 +1,7 @@
 /* eslint-disable tailwindcss/no-unnecessary-arbitrary-value */
 import _ from "lodash";
 import "src/components/css/input.css";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import React, { useRef } from "react";
 
 // Used for typing the input component while omitting specific input types
