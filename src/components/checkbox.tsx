@@ -2,6 +2,7 @@
 /* eslint-disable tailwindcss/no-unnecessary-arbitrary-value */
 import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
+import { createStringBuilder } from "src/helpers/createStringBuilder";
 
 export interface ICheckboxProps {
   label: string;
@@ -24,6 +25,19 @@ export default function Checkbox(p: ICheckboxProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChecked]);
 
+  const outerElementBorder = useMemo(() => {
+    const sb = createStringBuilder();
+    p.border && sb.append("border-2 ");
+    !p.border && sb.append("border-2 border-transparent");
+    p.border && isHovered && sb.append("border-tertiary-600 ");
+    p.border && !isHovered && sb.append("border-tertiary-500 ");
+    return sb.toString();
+  }, [p.border, isHovered]);
+
+  const bgColor = useMemo(() => {
+    return `${isHovered ? "bg-tertiary-500" : "bg-tertiary-400"}`;
+  }, [isHovered]);
+
   return (
     <div
       onMouseEnter={() => setIsHovered(true)}
@@ -33,14 +47,14 @@ export default function Checkbox(p: ICheckboxProps) {
         e.preventDefault();
         setIsChecked(!isChecked);
       }}
-      className={`w-fit items-start rounded p-2 ${p.border ? `border-2 ${isHovered ? "border-tertiary-600" : "border-tertiary-500"}` : "border-2 border-transparent"}`}
+      className={`w-fit items-start rounded p-2 ${outerElementBorder}`}
     >
       <div className="flex items-center">
         <input
           id={checkboxId}
           type="checkbox"
           checked={isChecked}
-          className={`relative block size-5 appearance-none rounded border-0 checked:!border-primary checked:!bg-primary after:checked:absolute after:checked:left-1/2 after:checked:top-[40%] after:checked:h-3/5 after:checked:w-[30%] after:checked:translate-x-[-45%] after:checked:translate-y-[-50%] after:checked:rotate-45 after:checked:border-b-2 after:checked:border-r-2 after:checked:border-tertiary-800 ${isHovered ? "bg-tertiary-500" : "bg-tertiary-400"}`}
+          className={`relative block size-5 appearance-none rounded border-0 checked:!border-primary checked:!bg-primary after:checked:absolute after:checked:left-1/2 after:checked:top-[40%] after:checked:h-3/5 after:checked:w-[30%] after:checked:translate-x-[-45%] after:checked:translate-y-[-50%] after:checked:rotate-45 after:checked:border-b-2 after:checked:border-r-2 after:checked:border-tertiary-800 ${bgColor}`}
           onChange={(e) => setIsChecked(e.target.checked)}
         />
         <label
