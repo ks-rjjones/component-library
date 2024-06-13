@@ -3,6 +3,7 @@ import _ from "lodash";
 import "src/components/css/input.css";
 import { useEffect, useMemo, useState } from "react";
 import React, { useRef } from "react";
+import { createStringBuilder } from "src/helpers/createStringBuilder";
 
 // Used for typing the input component while omitting specific input types
 const unsupportedInputTypes = ["button", "checkbox", "image", "radio", "range", "reset", "submit"];
@@ -141,6 +142,16 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
     return `${p.hidden ? "!hidden !border-transparent" : ""}`;
   }, [p.hidden]);
 
+  const outerElementBorder = useMemo(() => {
+    const sb = createStringBuilder();
+    p.border && sb.append("border-2 ");
+    !p.border && sb.append("border-2 border-transparent");
+    p.border && isHovered && sb.append("border-tertiary-600 ");
+    p.border && !isHovered && sb.append("border-tertiary-500 ");
+    p.border && isFocused && sb.append("!border-primary ");
+    return `${p.border ? `border-2 ${isHovered ? "border-tertiary-600" : "border-tertiary-500"} ${isFocused ? "!border-primary" : ""}` : "border-2 border-transparent"} ${hidden}`;
+  }, [hidden, isFocused, isHovered, p.border]);
+
   const SearchIcon = () => {
     return (
       <div className="mr-2 flex items-center">
@@ -164,7 +175,7 @@ const Input = React.forwardRef<HTMLInputElement, IInputProps>((p: IInputProps, r
 
   return (
     <div
-      className={`relative mb-6 max-w-[300px] items-start rounded px-2 py-0 ${p.border ? `border-2 ${isHovered ? "border-tertiary-600" : "border-tertiary-500"} ${isFocused ? "!border-primary" : ""}` : "border-2 border-transparent"} ${hidden}`}
+      className={`relative mb-6 max-w-[300px] items-start rounded px-2 py-0 ${outerElementBorder}`}
     >
       <div className="relative flex flex-col items-start">
         <label
